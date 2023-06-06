@@ -120,6 +120,20 @@ func (h *transactionHandler) UpdateTransaction(c echo.Context) error {
 
 }
 
+func (h *transactionHandler) GetTransactionByUser(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	// var transaction models.Transaction
+	transaction, err := h.TransactionRepository.GetTransactionByUser(id)
+
+	// fmt.Println(transaction)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: transaction})
+}
+
 // func convertResponseTransaction(u models.Transaction) transactiondto.TransactionResponse {
 // 	return transactiondto.TransactionResponse{
 // 		ID:         u.ID,

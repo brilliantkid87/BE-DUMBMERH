@@ -11,6 +11,7 @@ import (
 	"dumbmerch/repositories"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 )
 
@@ -67,7 +68,7 @@ func (h *tripHandler) CreateTrip(c echo.Context) error {
 	request := tripdto.CreateTripRequest{
 		Title:          c.FormValue("title"),
 		CountryID:      country_id,
-		Accommodation:  c.FormValue("accomodation"),
+		Accommodation:  c.FormValue("accommodation"),
 		Transportation: c.FormValue("transportation"),
 		Eat:            c.FormValue("eat"),
 		Day:            day,
@@ -88,8 +89,8 @@ func (h *tripHandler) CreateTrip(c echo.Context) error {
 		})
 	}
 
-	// userLogin := c.Get("userLogin")
-	// userId := userLogin.(jwt.MapClaims)["id"].(float64)
+	userLogin := c.Get("userLogin")
+	userId := userLogin.(jwt.MapClaims)["id"].(float64)
 
 	country, _ := h.TripRepository.GetCountryByID(request.CountryID)
 
@@ -107,7 +108,7 @@ func (h *tripHandler) CreateTrip(c echo.Context) error {
 		Quota:          request.Quota,
 		Description:    request.Description,
 		Image:          request.Image,
-		// UserID:         int(userId),
+		UserID:         int(userId),
 	}
 
 	data, err := h.TripRepository.CreateTrip(trip)

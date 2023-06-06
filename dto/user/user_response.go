@@ -9,6 +9,7 @@ type UserResponse struct {
 	Password string `json:"password" form:"password"`
 	Phone    string `json:"phone" form:"phone"`
 	Address  string `json:"address" form:"address"`
+	Role     string `json:"role" form:"role"`
 	// CountryID int            `json:"country_id" form:"country_id"`
 	// Country   models.Country `json:"country"`
 	TransactionID int                `json:"transaction_id"`

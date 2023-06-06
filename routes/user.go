@@ -13,8 +13,8 @@ func UserRoutes(e *echo.Group) {
 	userRepository := repositories.RepositoryUser(mysql.DB)
 	h := handlers.HandlerUser(userRepository)
 
-	e.GET("/users", middleware.Auth(h.FindUsers))
-	e.GET("/user/:id", middleware.Auth(h.GetUser))
+	e.GET("/users", h.FindUsers)
+	e.GET("/user/:id", h.GetUser)
 	e.POST("/user", middleware.Auth(h.CreateUser))
 	e.PATCH("/user/:id", middleware.Auth(h.UpdateUser))
 	e.DELETE("/user/:id", middleware.Auth(h.DeleteUser))

@@ -15,8 +15,8 @@ func main() {
 	e := echo.New()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"localhost:5000"},
-		AllowMethods: []string{echo.GET, echo.POST, echo.PATCH},
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{echo.GET, echo.POST, echo.PATCH, echo.DELETE},
 		AllowHeaders: []string{"X-Requested-With", "Content-Type", "Authorization"},
 	}))
 
