@@ -208,6 +208,8 @@ func (h *transactionHandler) Notification(c echo.Context) error {
 
 	fmt.Print("ini payloadnya", notificationPayload)
 
+	transaction, _ := h.TransactionRepository.GetTransaction(order_id)
+
 	if transactionStatus == "capture" {
 		if fraudStatus == "challenge" {
 			// TODO set transaction status on your database to 'challenge'
@@ -215,6 +217,7 @@ func (h *transactionHandler) Notification(c echo.Context) error {
 			h.TransactionRepository.UpdateTransaction("pending", order_id)
 		} else if fraudStatus == "accept" {
 			// TODO set transaction status on your database to 'success'
+			SendMail("success", transaction)
 			h.TransactionRepository.UpdateTransaction("success", order_id)
 		}
 	} else if transactionStatus == "settlement" {
@@ -244,8 +247,8 @@ func SendMail(status string, transaction models.Transaction) {
 		var CONFIG_AUTH_EMAIL = os.Getenv("EMAIL_SYSTEM")
 		var CONFIG_AUTH_PASSWORD = os.Getenv("PASSWORD_SYSTEM")
 
-		var productName = transaction.Product.Name
-		var price = strconv.Itoa(transaction.Product.Price)
+		var productName = transaction.Trip.Title
+		var price = strconv.Itoa(transaction.Total)
 
 		mailer := gomail.NewMessage()
 		mailer.SetHeader("From", CONFIG_SENDER_NAME)
@@ -265,7 +268,7 @@ func SendMail(status string, transaction models.Transaction) {
 		</style>
 		</head>
 		<body>
-		<h2>Product payment :</h2>
+		<h2>Trip payment :</h2>
 		<ul style="list-style-type:none;">
 		  <li>Name : %s</li>
 		  <li>Total payment: Rp.%s</li>
