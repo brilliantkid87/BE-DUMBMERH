@@ -14,7 +14,7 @@ func TransactionRoutes(e *echo.Group) {
 	h := handlers.HandlerTransaction(bravo)
 
 	e.GET("/transactions", h.FIndTransaction)
-	// e.GET("transaction/:id", h.GetTransaction)
+	e.GET("/transaction/:id", h.GetTransaction)
 	e.GET("/transaction-user/:id", h.GetTransactionByUser)
 	e.PATCH("/transaction/:id", h.UpdateTransaction)
 	e.POST("/transaction", middleware.Auth(h.CreateTransaction))

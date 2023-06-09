@@ -59,16 +59,16 @@ func (h *transactionHandler) CreateTransaction(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: data})
 }
 
-// func (h *transactionHandler) GetTransaction(c echo.Context) error {
-// 	id, _ := strconv.Atoi(c.Param("id"))
+func (h *transactionHandler) GetTransaction(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
 
-// 	user, err := h.TransactionRepository.GetTransaction(id)
-// 	if err != nil {
-// 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
-// 	}
+	user, err := h.TransactionRepository.GetTransaction(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
+	}
 
-// 	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: convertResponseTransaction(user)})
-// }
+	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: convertResponseTransaction(user)})
+}
 
 func (h *transactionHandler) UpdateTransaction(c echo.Context) error {
 	request := new(transactiondto.UpdateTransactionRequest)
@@ -134,13 +134,13 @@ func (h *transactionHandler) GetTransactionByUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: transaction})
 }
 
-// func convertResponseTransaction(u models.Transaction) transactiondto.TransactionResponse {
-// 	return transactiondto.TransactionResponse{
-// 		ID:         u.ID,
-// 		CounterQty: u.CounterQty,
-// 		Total:      u.Total,
-// 		Status:     u.Status,
-// 		Attachment: u.Attachment,
-// 		TripId:     u.TripId,
-// 	}
-// }
+func convertResponseTransaction(u models.Transaction) transactiondto.TransactionResponse {
+	return transactiondto.TransactionResponse{
+		ID:         u.ID,
+		CounterQty: u.CounterQty,
+		Total:      u.Total,
+		Status:     u.Status,
+		Attachment: u.Attachment,
+		TripId:     u.TripId,
+	}
+}
