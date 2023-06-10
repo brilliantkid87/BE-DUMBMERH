@@ -5,6 +5,7 @@ import (
 	"dumbmerch/pkg/mysql"
 	"dumbmerch/routes"
 	"fmt"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -15,8 +16,8 @@ func main() {
 	e := echo.New()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"localhost:5000"},
-		AllowMethods: []string{echo.GET, echo.POST, echo.PATCH},
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{echo.GET, echo.POST, echo.PATCH, echo.DELETE},
 		AllowHeaders: []string{"X-Requested-With", "Content-Type", "Authorization"},
 	}))
 
@@ -31,71 +32,7 @@ func main() {
 	routes.RouteInit(e.Group("/api/v1"))
 	e.Static("/uploads", "./uploads")
 
-	fmt.Println("Running on port 5000")
-	e.Logger.Fatal(e.Start("localhost:5000"))
+	var port = os.Getenv("PORT")
+	fmt.Println("server running localhost:" + port)
+	e.Logger.Fatal(e.Start(":" + port))
 }
-
-// func FindDataUsers(c echo.Context) error {
-// 	c.Response().Header().Set("Content-type", "application/json")
-// 	c.Response().WriteHeader(http.StatusOK)
-
-// 	return json.NewEncoder(c.Response()).Encode(Talent)
-// }
-
-// func AddDataUser(c echo.Context) error {
-// 	var data DataUser
-
-// 	json.NewDecoder(c.Request().Body).Decode(&data)
-
-// 	Talent = append(Talent, data)
-// 	c.Response().Header().Set("Content-type", "application/json")
-// 	c.Response().WriteHeader(http.StatusOK)
-
-// 	return json.NewEncoder(c.Response()).Encode(Talent)
-// }
-
-// func GetDataUser(c echo.Context) error {
-// 	c.Response().Header().Set("Content-type", "application/json")
-// 	id := c.Param("id")
-// 	var Data DataUser
-// 	var cekId = false
-
-// 	for _, talent := range Talent {
-// 		if id == talent.Id {
-// 			cekId = true
-// 			Data = talent
-// 		}
-// 	}
-
-// 	if !cekId {
-// 		c.Response().WriteHeader(http.StatusNotFound)
-// 		return json.NewEncoder(c.Response()).Encode("ID: " + id + " not found")
-// 	}
-
-// 	c.Response().WriteHeader(http.StatusOK)
-// 	return json.NewEncoder(c.Response()).Encode(Data)
-// }
-
-// func DeleteDataUser(c echo.Context) error {
-// 	id := c.Param("id")
-// 	var cekId = false
-// 	var index = 0
-
-// 	for i, talent := range Talent {
-// 		if id == talent.Id {
-// 			cekId = true
-// 			index = i
-// 		}
-// 	}
-
-// 	if !cekId {
-// 		c.Response().WriteHeader(http.StatusNotFound)
-// 		return json.NewEncoder(c.Response()).Encode("ID: " + id + " not found")
-// 	}
-
-// 	Talent = append(Talent[:index], Talent[index+1:]...)
-
-// 	c.Response().Header().Set("Content-type", "application/json")
-// 	c.Response().WriteHeader(http.StatusOK)
-// 	return json.NewEncoder(c.Response()).Encode(Talent)
-// }

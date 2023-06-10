@@ -7,7 +7,7 @@ type TripResponse struct {
 	Title          string         `json:"title" form:"title"`
 	CountryID      int            `json:"country_id" form:"country_id"`
 	Country        models.Country `json:"country"`
-	Accommodation  string         `json:"accommodation" form:"accomodation"`
+	Accommodation  string         `json:"accommodation" form:"accommodation"`
 	Transportation string         `json:"transportation" form:"transportatiob"`
 	Eat            string         `json:"eat" form:"eat"`
 	Day            int            `json:"day" form:"day"`

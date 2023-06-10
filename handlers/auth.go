@@ -52,6 +52,9 @@ func (h *handlerAuth) Register(c echo.Context) error {
 		Name:     request.Name,
 		Email:    request.Email,
 		Password: password,
+		Role:     "",
+		Phone:    request.Phone,
+		Address:  request.Address,
 	}
 
 	data, err := h.AuthRepository.Register(user)
@@ -81,22 +84,20 @@ func (h *handlerAuth) Login(c echo.Context) error {
 		Password: request.Password,
 	}
 
-	
 	user, err := h.AuthRepository.Login(user.Email)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}
-
 
 	isValid := bcrypt.CheckPasswordHash(request.Password, user.Password)
 	if !isValid {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: "wrong email or password"})
 	}
 
-	
 	claims := jwt.MapClaims{}
 	claims["id"] = user.ID
 	claims["exp"] = time.Now().Add(time.Hour * 2).Unix()
+	claims["role"] = user.Role
 
 	token, errGenerateToken := jwtToken.GenerateToken(&claims)
 	if errGenerateToken != nil {
@@ -105,8 +106,12 @@ func (h *handlerAuth) Login(c echo.Context) error {
 	}
 
 	loginResponse := authdto.LoginResponse{
-		Email: user.Email,
-		Token: token,
+		Name:    user.Name,
+		Email:   user.Email,
+		Token:   token,
+		Role:    user.Role,
+		Phone:   user.Phone,
+		Address: user.Address,
 	}
 
 	return c.JSON(http.StatusOK, dto.SuccessResult{
@@ -114,10 +119,11 @@ func (h *handlerAuth) Login(c echo.Context) error {
 		Data: loginResponse})
 }
 
-// func (h *handlerAuth) LoginRequest(c echo.Context) error {
-// 	request := new(authdto.AuthRequest)
-// 	if err := c.Bind(request); err != nil {
-// 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
-// 	}
-// 	return
-// }
+func (h *handlerAuth) CheckAuth(c echo.Context) error {
+	userLogin := c.Get("userLogin")
+	userId := userLogin.(jwt.MapClaims)["id"].(float64)
+
+	user, _ := h.AuthRepository.CheckAuth(int(userId))
+
+	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: user})
+}

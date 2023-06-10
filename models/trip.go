@@ -18,10 +18,10 @@ type Trip struct {
 	CountryID      int             `json:"country_id" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Country        CountryResponse `json:"country" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	// Country   Country   `json:"country" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	CreatedAt time.Time `json:"-"`
-	UpdatedAt time.Time `json:"-"`
-	// UserID    int          `json:"user_id"`
-	// User      UserResponse `json:"user"`
+	CreatedAt time.Time    `json:"-"`
+	UpdatedAt time.Time    `json:"-"`
+	UserID    int          `json:"user_id"`
+	User      UserResponse `json:"user"`
 }
 
 type TripsResponse struct {
